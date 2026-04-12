@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>个人小说库 · 自动导入文件夹</title>
+    <!-- 引入 mammoth.js 用于解析 .docx -->
+    <script src="https://cdn.jsdelivr.net/npm/mammoth@1.4.2/mammoth.browser.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, 'Segoe UI', 'Noto Serif SC', serif;
+            background: #faf9f8;
+            color: #1e1e2a;
+            line-height: 1.7;
+        }
+
+        .app {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* 侧边栏 */
+        .sidebar {
+            width: 300px;
+            background: #fffef7;
+            border-right: 1px solid #e6e4dd;
+            padding: 1.5rem 1rem;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .sidebar h2 {
+            font-size: 1.4rem;
+            font-weight: 500;
+            border-bottom: 2px solid #e0dbcf;
+            padding-bottom: 0.5rem;
+        }
+
+        .admin-buttons {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-bottom: 0.5rem;
+        }
+
+        .btn {
+            background: #f0ede5;
+            border: none;
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            font-family: inherit;
+            transition: 0.1s;
+        }
+
+        .btn-primary {
+            background: #d9c8b3;
+            color: #3b2e24;
+        }
+
+        .btn-primary:hover {
+            background: #cbbfa6;
+        }
+
+        /* 小说列表 */
+        .novels-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+        }
+
+        .novel-card {
+            border-left: 3px solid #d9a066;
+            padding-left: 0.75rem;
+        }
+
+        .novel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            flex-wrap: wrap;
+            margin-bottom: 0.5rem;
+        }
+
+        .novel-name {
+            font-weight: 600;
+            font-size: 1.05rem;
+            color: #b45f2b;
+            cursor: pointer;
+        }
+
+        .chapter-list {
+            list-style: none;
+            margin-left: 1rem;
+            margin-top: 0.3rem;
+        }
+
+        .chapter-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.2rem 0;
+            font-size: 0.85rem;
+        }
+
+        .chapter-title {
+            cursor: pointer;
+            color: #5a5a68;
+            flex: 1;
+        }
+
+        .chapter-title.active {
+            color: #b45f2b;
+            font-weight: 500;
+        }
+
+        .small-btn {
+            background: none;
+            border: none;
+            font-size: 0.7rem;
+            cursor: pointer;
+            color: #b0aaa0;
+            padding: 0 0.2rem;
+        }
+
+        /* 右侧正文 */
+        .main-content {
+            flex: 1;
+            padding: 2rem;
+            max-width: 900px;
+            margin: 0 auto;
+            background: #ffffff;
+        }
+
+        .content-header {
+            border-bottom: 1px solid #ece7df;
+            padding-bottom: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .content-header h1 {
+            font-size: 1.8rem;
+            font-weight: 500;
+        }
+
+        .novel-body {
+            font-size: 1.05rem;
+            text-align: justify;
+        }
+
+        .novel-body p {
+            margin: 1em 0;
+        }
+
+        .placeholder {
+            text-align: center;
+            padding: 3rem;
+            color: #bbb6ab;
+        }
+
+        @media (max-width: 700px) {
+            .app {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: static;
+                border-right: none;
+                border-bottom: 1px solid #e6e4dd;
+            }
+            .main-content {
+                padding: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="app">
+    <aside class="sidebar">
+        <h2>📖 小说文库</h2>
+        <div class="admin-buttons">
+            <button class="btn btn-primary" id="addNovelBtn">➕ 添加小说</button>
+            <button class="btn btn-primary" id="importFolderBtn">📁 从文件夹导入小说</button>
+            <button class="btn" id="exportAllBtn">📦 导出备份</button>
+            <button class="btn" id="importAllBtn">📂 导入备份</button>
+            <input type="file" id="importFileInput" accept="*" style="display: none;">
+        </div>
+        <div id="novelsList" class="novels-container">
+            <div class="placeholder">暂无小说，点击上方添加</div>
+        </div>
+    </aside>
+
+    <main class="main-content" id="mainContent">
+        <div class="placeholder">✨ 从左侧选择章节开始阅读 ✨</div>
+    </main>
+</div>
+
+<script>
+    // ---------- 数据模型 ----------
+    let novels = [];        // 小说 { id, name, chapters: [{ id, title, content }] }
+    let currentChapterId = null;
+
+    // 辅助函数
+    function genId() { return Date.now() + '-' + Math.random().toString(36).substr(2, 6); }
+
+    function saveToLocal() {
+        localStorage.setItem('novel_library', JSON.stringify(novels));
+    }
+
+    function loadFromLocal() {
+        const raw = localStorage.getItem('novel_library');
+        if (raw) {
+            try {
+                novels = JSON.parse(raw);
+            } catch(e) { console.error(e); }
+        } else {
+            novels = [];
+        }
+        renderSidebar();
+        if (currentChapterId) {
+            const chapter = findChapterById(currentChapterId);
+            if (chapter) {
+                renderContent(chapter.novelName, chapter.chapterTitle, chapter.content);
+            } else {
+                document.getElementById('mainContent').innerHTML = '<div class="placeholder">请选择章节</div>';
+                currentChapterId = null;
+            }
+        }
+    }
+
+    function findChapterById(chapId) {
+        for (let novel of novels) {
+            for (let chap of novel.chapters) {
+                if (chap.id === chapId) {
+                    return { novelName: novel.name, chapterTitle: chap.title, content: chap.content, novelId: novel.id };
+                }
+            }
+        }
+        return null;
+    }
+
+    function renderContent(novelName, chapterTitle, contentHtml) {
+        const container = document.getElementById('mainContent');
+        container.innerHTML = `
+            <div class="content-header">
+                <h1>${escapeHtml(chapterTitle)}</h1>
+                <div class="meta">《${escapeHtml(novelName)}》</div>
+            </div>
+            <div class="novel-body">${contentHtml || '<p>（无内容）</p>'}</div>
+        `;
+    }
+
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        });
+    }
+
+    // 将纯文本转为 HTML 段落（保留换行）
+    function textToHtml(text) {
+        if (!text) return '';
+        // 按空行分段，否则按单换行
+        let paragraphs = text.split(/\r?\n\r?\n/);
+        if (paragraphs.length === 1) paragraphs = text.split(/\r?\n/);
+        return paragraphs.map(p => p.trim()).filter(p => p).map(p => `<p>${escapeHtml(p)}</p>`).join('');
+    }
+
+    // 渲染左侧小说列表
+    function renderSidebar() {
+        const container = document.getElementById('novelsList');
+        if (!novels.length) {
+            container.innerHTML = '<div class="placeholder">暂无小说，点击上方添加</div>';
+            return;
+        }
+        let html = '';
+        novels.forEach(novel => {
+            html += `<div class="novel-card" data-novel-id="${novel.id}">
+                        <div class="novel-header">
+                            <span class="novel-name" data-novel-id="${novel.id}">📘 ${escapeHtml(novel.name)}</span>
+                            <div>
+                                <button class="small-btn add-chapter-btn" data-novel-id="${novel.id}" title="添加章节">+章</button>
+                                <button class="small-btn edit-novel-btn" data-novel-id="${novel.id}" title="重命名">✎</button>
+                                <button class="small-btn delete-novel-btn" data-novel-id="${novel.id}" title="删除小说">🗑</button>
+                            </div>
+                        </div>
+                        <ul class="chapter-list">`;
+            if (novel.chapters.length === 0) {
+                html += `<li style="color:#bbb; font-size:0.75rem; margin-left:1rem;">暂无章节，点击“+章”添加</li>`;
+            } else {
+                novel.chapters.forEach(chap => {
+                    const activeClass = (currentChapterId === chap.id) ? 'active' : '';
+                    html += `<li class="chapter-item">
+                                <span class="chapter-title ${activeClass}" data-chapter-id="${chap.id}" data-novel-id="${novel.id}">📄 ${escapeHtml(chap.title)}</span>
+                                <button class="small-btn edit-chapter-btn" data-chapter-id="${chap.id}" data-novel-id="${novel.id}" title="编辑">✎</button>
+                                <button class="small-btn delete-chapter-btn" data-chapter-id="${chap.id}" data-novel-id="${novel.id}" title="删除">🗑</button>
+                            </li>`;
+                });
+            }
+            html += `</ul></div>`;
+        });
+        container.innerHTML = html;
+    }
+
+    // ---------- 小说操作 ----------
+    function addNovel() {
+        let name = prompt('请输入小说名称：');
+        if (name && name.trim()) {
+            novels.push({ id: genId(), name: name.trim(), chapters: [] });
+            saveToLocal();
+            renderSidebar();
+        } else if (name !== null) alert('名称不能为空');
+    }
+
+    function addChapter(novelId) {
+        const novel = novels.find(n => n.id === novelId);
+        if (!novel) return;
+        let title = prompt('请输入章节标题：');
+        if (!title || !title.trim()) return;
+        const useFile = confirm('是否从 .txt 或 .docx 文件上传正文？\n“确定”选择文件，“取消”手动输入');
+        if (useFile) {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.txt,.docx';
+            input.onchange = async (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+                let content = '';
+                if (file.name.endsWith('.txt')) {
+                    const text = await file.text();
+                    content = textToHtml(text);
+                } else if (file.name.endsWith('.docx')) {
+                    const arrayBuffer = await file.arrayBuffer();
+                    const result = await mammoth.extractRawText({ arrayBuffer });
+                    content = textToHtml(result.value);
+                } else {
+                    alert('不支持的文件类型');
+                    return;
+                }
+                const newChap = { id: genId(), title: title.trim(), content: content || '<p>（暂无内容）</p>' };
+                novel.chapters.push(newChap);
+                saveToLocal();
+                renderSidebar();
+                currentChapterId = newChap.id;
+                renderContent(novel.name, newChap.title, newChap.content);
+            };
+            input.click();
+        } else {
+            let content = prompt('请输入章节正文（纯文本，换行自动分段）：', '');
+            if (content !== null) {
+                content = textToHtml(content);
+                const newChap = { id: genId(), title: title.trim(), content: content || '<p>（暂无内容）</p>' };
+                novel.chapters.push(newChap);
+                saveToLocal();
+                renderSidebar();
+                currentChapterId = newChap.id;
+                renderContent(novel.name, newChap.title, newChap.content);
+            }
+        }
+    }
+
+    function editNovel(novelId) {
+        const novel = novels.find(n => n.id === novelId);
+        if (!novel) return;
+        let newName = prompt('修改小说名称', novel.name);
+        if (newName && newName.trim()) {
+            novel.name = newName.trim();
+            saveToLocal();
+            renderSidebar();
+            if (currentChapterId) {
+                const chap = findChapterById(currentChapterId);
+                if (chap && chap.novelId === novelId) renderContent(novel.name, chap.chapterTitle, chap.content);
+            }
+        }
+    }
+
+    function deleteNovel(novelId) {
+        if (confirm('确定删除整本小说吗？')) {
+            novels = novels.filter(n => n.id !== novelId);
+            if (currentChapterId && !findChapterById(currentChapterId)) {
+                currentChapterId = null;
+                document.getElementById('mainContent').innerHTML = '<div class="placeholder">✨ 从左侧选择章节开始阅读 ✨</div>';
+            }
+            saveToLocal();
+            renderSidebar();
+        }
+    }
+
+    function editChapter(novelId, chapterId) {
+        const novel = novels.find(n => n.id === novelId);
+        if (!novel) return;
+        const chapter = novel.chapters.find(c => c.id === chapterId);
+        if (!chapter) return;
+        let newTitle = prompt('修改章节标题', chapter.title);
+        if (newTitle && newTitle.trim()) newTitle = newTitle.trim();
+        else if (newTitle !== null) alert('标题不能为空');
+        const action = confirm('是否同时修改正文？\n“确定”编辑正文，“取消”仅修改标题');
+        if (action) {
+            const useFile = confirm('是否从 .txt 或 .docx 文件上传新正文？');
+            if (useFile) {
+                const input = document.createElement('input');
+                input.type = 'file';
+                input.accept = '.txt,.docx';
+                input.onchange = async (e) => {
+                    const file = e.target.files[0];
+                    if (!file) return;
+                    let newContent = '';
+                    if (file.name.endsWith('.txt')) {
+                        const text = await file.text();
+                        newContent = textToHtml(text);
+                    } else if (file.name.endsWith('.docx')) {
+                        const arrayBuffer = await file.arrayBuffer();
+                        const result = await mammoth.extractRawText({ arrayBuffer });
+                        newContent = textToHtml(result.value);
+                    } else {
+                        alert('不支持的文件类型');
+                        return;
+                    }
+                    if (newTitle) chapter.title = newTitle;
+                    chapter.content = newContent;
+                    saveToLocal();
+                    renderSidebar();
+                    if (currentChapterId === chapterId) renderContent(novel.name, chapter.title, chapter.content);
+                };
+                input.click();
+            } else {
+                let raw = prompt('输入新正文（纯文本）', '');
+                if (raw !== null) {
+                    let newContent = textToHtml(raw);
+                    if (newTitle) chapter.title = newTitle;
+                    chapter.content = newContent;
+                    saveToLocal();
+                    renderSidebar();
+                    if (currentChapterId === chapterId) renderContent(novel.name, chapter.title, chapter.content);
+                } else if (newTitle) {
+                    chapter.title = newTitle;
+                    saveToLocal();
+                    renderSidebar();
+                    if (currentChapterId === chapterId) renderContent(novel.name, chapter.title, chapter.content);
+                }
+            }
+        } else {
+            if (newTitle) {
+                chapter.title = newTitle;
+                saveToLocal();
+                renderSidebar();
+                if (currentChapterId === chapterId) renderContent(novel.name, chapter.title, chapter.content);
+            }
+        }
+    }
+
+    function deleteChapter(novelId, chapterId) {
+        if (confirm('确定删除该章节吗？')) {
+            const novel = novels.find(n => n.id === novelId);
+            if (novel) {
+                novel.chapters = novel.chapters.filter(c => c.id !== chapterId);
+                if (currentChapterId === chapterId) {
+                    currentChapterId = null;
+                    document.getElementById('mainContent').innerHTML = '<div class="placeholder">章节已删除，请重新选择</div>';
+                }
+                saveToLocal();
+                renderSidebar();
+            }
+        }
+    }
+
+    // ---------- 文件夹批量导入（支持 .txt 和 .docx） ----------
+    async function importFromFolder() {
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.webkitdirectory = true;
+        input.directory = true;
+        input.onchange = async (e) => {
+            const files = Array.from(e.target.files);
+            const validFiles = files.filter(f => f.name.endsWith('.txt') || f.name.endsWith('.docx'));
+            if (validFiles.length === 0) {
+                alert('未找到任何 .txt 或 .docx 文件');
+                return;
+            }
+            let count = 0;
+            for (const file of validFiles) {
+                let novelName = file.name.replace(/\.(txt|docx)$/i, '');
+                // 检查是否已存在同名小说（可选）
+                let existing = novels.find(n => n.name === novelName);
+                if (existing) {
+                    if (!confirm(`小说《${novelName}》已存在，是否覆盖？`)) continue;
+                    novels = novels.filter(n => n.name !== novelName);
+                }
+                let rawText = '';
+                if (file.name.endsWith('.txt')) {
+                    rawText = await file.text();
+                } else if (file.name.endsWith('.docx')) {
+                    const arrayBuffer = await file.arrayBuffer();
+                    const result = await mammoth.extractRawText({ arrayBuffer });
+                    rawText = result.value;
+                }
+                const htmlContent = textToHtml(rawText);
+                const newNovel = {
+                    id: genId(),
+                    name: novelName,
+                    chapters: [{ id: genId(), title: '正文', content: htmlContent || '<p>（无内容）</p>' }]
+                };
+                novels.push(newNovel);
+                count++;
+            }
+            if (count > 0) {
+                saveToLocal();
+                renderSidebar();
+                alert(`成功导入 ${count} 本小说`);
+            } else {
+                alert('没有导入新小说');
+            }
+        };
+        input.click();
+    }
+
+    // ---------- 备份导入导出 ----------
+    function exportAll() {
+        const dataStr = JSON.stringify(novels, null, 2);
+        const blob = new Blob([dataStr], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `novel_library_backup_${new Date().toISOString().slice(0,19)}.json`;
+        a.click();
+        URL.revokeObjectURL(url);
+    }
+
+    function importAll(file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            try {
+                const imported = JSON.parse(e.target.result);
+                if (Array.isArray(imported)) {
+                    novels = imported;
+                    saveToLocal();
+                    currentChapterId = null;
+                    renderSidebar();
+                    document.getElementById('mainContent').innerHTML = '<div class="placeholder">导入成功！点击左侧章节开始阅读</div>';
+                } else {
+                    alert('备份文件格式不正确');
+                }
+            } catch(err) {
+                alert('解析失败，请确保是有效的JSON备份文件');
+            }
+        };
+        reader.readAsText(file);
+    }
+
+    // ---------- 事件绑定 ----------
+    function bindEvents() {
+        document.getElementById('addNovelBtn').onclick = addNovel;
+        document.getElementById('importFolderBtn').onclick = importFromFolder;
+        document.getElementById('exportAllBtn').onclick = exportAll;
+        document.getElementById('importAllBtn').onclick = () => document.getElementById('importFileInput').click();
+        document.getElementById('importFileInput').onchange = (e) => {
+            if (e.target.files.length) importAll(e.target.files[0]);
+            e.target.value = '';
+        };
+
+        // 动态事件委托
+        document.body.addEventListener('click', (e) => {
+            if (e.target.classList.contains('novel-name')) {
+                const novelId = e.target.dataset.novelId;
+                const novel = novels.find(n => n.id === novelId);
+                if (novel && novel.chapters.length) {
+                    const firstChap = novel.chapters[0];
+                    currentChapterId = firstChap.id;
+                    renderContent(novel.name, firstChap.title, firstChap.content);
+                    renderSidebar();
+                } else if (novel) alert('这本小说还没有章节，请先添加章节');
+                return;
+            }
+            if (e.target.classList.contains('chapter-title')) {
+                const chapId = e.target.dataset.chapterId;
+                const novelId = e.target.dataset.novelId;
+                const novel = novels.find(n => n.id === novelId);
+                const chapter = novel?.chapters.find(c => c.id === chapId);
+                if (novel && chapter) {
+                    currentChapterId = chapId;
+                    renderContent(novel.name, chapter.title, chapter.content);
+                    renderSidebar();
+                }
+                return;
+            }
+            if (e.target.classList.contains('add-chapter-btn')) addChapter(e.target.dataset.novelId);
+            if (e.target.classList.contains('edit-novel-btn')) editNovel(e.target.dataset.novelId);
+            if (e.target.classList.contains('delete-novel-btn')) deleteNovel(e.target.dataset.novelId);
+            if (e.target.classList.contains('edit-chapter-btn')) editChapter(e.target.dataset.novelId, e.target.dataset.chapterId);
+            if (e.target.classList.contains('delete-chapter-btn')) deleteChapter(e.target.dataset.novelId, e.target.dataset.chapterId);
+        });
+    }
+
+    function init() {
+        loadFromLocal();
+        bindEvents();
+    }
+    init();
+</script>
+</body>
+</html>

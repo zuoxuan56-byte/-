@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>✨ 栩你渝生 · 雷朋学默契大考 ✨ | 田雷×郑朋 甜玉米班专属</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #fef9e6 0%, #fff2e0 40%, #ffe6d5 100%);
+            font-family: 'Segoe UI', 'Quicksand', 'Poppins', 'Noto Sans', system-ui, sans-serif;
+            padding: 20px;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .corn-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+        .corn {
+            position: absolute;
+            bottom: -20px;
+            font-size: 1.4rem;
+            opacity: 0.2;
+            animation: floatCorn 10s linear infinite;
+            color: #f7b05e;
+        }
+        @keyframes floatCorn {
+            0% { transform: translateY(0) rotate(0deg); opacity: 0.2; }
+            100% { transform: translateY(-100vh) rotate(360deg); opacity: 0.5; }
+        }
+
+        .game-card {
+            position: relative;
+            z-index: 10;
+            max-width: 780px;
+            width: 100%;
+            background: rgba(255, 251, 245, 0.96);
+            backdrop-filter: blur(2px);
+            border-radius: 56px;
+            box-shadow: 0 25px 45px rgba(160, 100, 40, 0.25), 0 0 0 2px #ffddb0 inset;
+            overflow: hidden;
+        }
+
+        .cp-header {
+            background: linear-gradient(120deg, #f3bc5c, #f8a34b);
+            padding: 20px 20px 18px;
+            text-align: center;
+            color: #2c1a0c;
+            clip-path: polygon(0 0, 100% 0, 100% 88%, 0 100%);
+        }
+        .cp-name {
+            font-size: 2.3rem;
+            font-weight: 800;
+            letter-spacing: 2px;
+            text-shadow: 2px 2px 0 #ffe0a3;
+            display: flex;
+            justify-content: center;
+            align-items: baseline;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .cp-name span {
+            background: #fff3e0;
+            padding: 5px 20px;
+            border-radius: 60px;
+            font-size: 1.5rem;
+            color: #b45f2b;
+            box-shadow: 0 4px 0 #c27e42;
+        }
+        .cp-name .heart-icon {
+            background: none;
+            box-shadow: none;
+            font-size: 2rem;
+            padding: 0;
+            color: #ffebbb;
+            text-shadow: 0 0 5px #ff8c42;
+        }
+        .sub {
+            font-size: 0.85rem;
+            background: #ffefcf;
+            display: inline-block;
+            padding: 5px 18px;
+            border-radius: 40px;
+            margin-top: 12px;
+            font-weight: 600;
+            color: #9b4e1a;
+        }
+
+        .stats-bar {
+            display: flex;
+            justify-content: space-between;
+            background: #fff2e4;
+            margin: 20px 20px 0;
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-weight: bold;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        }
+        .score-box, .q-counter {
+            background: #ffffffc9;
+            padding: 6px 18px;
+            border-radius: 40px;
+            color: #b45f2b;
+            backdrop-filter: blur(2px);
+        }
+        .score-box span, .q-counter span {
+            color: #f28b2e;
+            font-size: 1.2rem;
+            margin-right: 6px;
+        }
+
+        .quiz-area {
+            padding: 20px 25px 25px;
+        }
+        .question-type {
+            display: inline-block;
+            background: #ffdeae;
+            padding: 5px 14px;
+            border-radius: 50px;
+            font-size: 0.7rem;
+            font-weight: bold;
+            color: #8b4c1a;
+            margin-bottom: 12px;
+            letter-spacing: 1px;
+        }
+        .question-text {
+            background: #fffaf2;
+            border-radius: 42px;
+            padding: 22px 18px;
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #4a2a10;
+            box-shadow: 0 6px 0 #f7cf9f;
+            margin-bottom: 25px;
+            line-height: 1.4;
+            border: 1px solid #ffe2b5;
+        }
+        .options-area {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            margin-bottom: 20px;
+        }
+        .opt-btn {
+            background: #fff5ea;
+            border: 2px solid #ffd49f;
+            border-radius: 100px;
+            padding: 12px 18px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            cursor: pointer;
+            transition: 0.2s;
+            color: #573d1f;
+        }
+        .opt-btn:hover:not(:disabled) {
+            background: #ffefdb;
+            transform: scale(0.98);
+            border-color: #f5a74b;
+        }
+        .opt-prefix {
+            background: #f3b56b;
+            width: 32px;
+            height: 32px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 30px;
+            font-weight: bold;
+            color: white;
+        }
+        .fill-input-group {
+            background: #fff5ea;
+            border-radius: 32px;
+            padding: 18px 20px;
+            margin-bottom: 16px;
+            border: 2px solid #ffd49f;
+        }
+        .blank-item {
+            margin-bottom: 18px;
+        }
+        .blank-label {
+            font-weight: 600;
+            color: #b45f2b;
+            margin-bottom: 8px;
+            display: block;
+            font-size: 0.9rem;
+        }
+        .fill-input {
+            width: 100%;
+            padding: 12px 18px;
+            font-size: 1rem;
+            border: 2px solid #ffdbb5;
+            border-radius: 60px;
+            background: white;
+            font-family: inherit;
+            transition: 0.2s;
+        }
+        .fill-input:focus {
+            outline: none;
+            border-color: #f3a547;
+            box-shadow: 0 0 0 2px #ffe0b5;
+        }
+        .fill-input:disabled {
+            background: #f7efdf;
+            color: #7a561f;
+        }
+        .submit-fill-btn {
+            background: #f8a44b;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 60px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 8px;
+            width: 100%;
+            font-size: 0.9rem;
+            transition: 0.1s;
+        }
+        .submit-fill-btn:active {
+            transform: translateY(2px);
+        }
+        .submit-fill-btn:disabled {
+            background: #c9a77a;
+            cursor: default;
+            transform: none;
+        }
+        .feedback {
+            background: #fff0e0;
+            border-radius: 32px;
+            padding: 12px 18px;
+            font-size: 0.9rem;
+            color: #b45a2a;
+            border-left: 6px solid #ffb366;
+            margin: 8px 0 20px;
+        }
+        .nav-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: space-between;
+        }
+        .btn {
+            border: none;
+            background: #ffdbb5;
+            padding: 12px 18px;
+            border-radius: 60px;
+            font-weight: bold;
+            font-size: 0.95rem;
+            cursor: pointer;
+            flex: 1;
+            text-align: center;
+            transition: 0.1s linear;
+            color: #6b3e17;
+        }
+        .btn-primary {
+            background: #f8a44b;
+            color: white;
+            box-shadow: 0 4px 0 #b45a1e;
+        }
+        .btn-primary:active {
+            transform: translateY(2px);
+            box-shadow: 0 1px 0 #b45a1e;
+        }
+        .btn-secondary {
+            background: #ffe1bd;
+            border: 1px solid #ffc489;
+        }
+        .btn-secondary:active {
+            transform: scale(0.97);
+        }
+        .btn:disabled {
+            opacity: 0.5;
+            transform: none;
+            cursor: default;
+        }
+        .result-panel {
+            background: #fef0e0;
+            margin: 15px 20px 20px;
+            border-radius: 48px;
+            padding: 20px;
+            text-align: center;
+            border: 1px solid #ffcf97;
+        }
+        .result-title {
+            font-size: 1.6rem;
+            font-weight: bold;
+            color: #c76e24;
+        }
+        .restart-special {
+            background: #f3a547;
+            color: white;
+            margin-top: 12px;
+            border: none;
+        }
+        footer {
+            font-size: 0.7rem;
+            text-align: center;
+            padding: 12px;
+            background: #ffe6cf;
+            color: #a7632c;
+        }
+        @media (max-width: 550px) {
+            .quiz-area {
+                padding: 15px;
+            }
+            .question-text {
+                font-size: 1rem;
+                padding: 16px;
+            }
+            .fill-input {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="corn-bg" id="cornBg"></div>
+<div class="game-card">
+    <div class="cp-header">
+        <div class="cp-name">
+            <span>栩你渝生</span>
+            <span class="heart-icon">🌽❤️</span>
+            <span>甜玉米班</span>
+        </div>
+        <div class="sub">✨ 《雷朋学》期末默契大考 · 田雷 × 郑朋 粉丝专属 ✨</div>
+    </div>
+
+    <div class="stats-bar">
+        <div class="score-box"><span>🌽</span> 默契分: <span id="scoreValue">0</span> / <span id="totalScore">300</span></div>
+        <div class="q-counter"><span>📖</span> 第 <span id="currentQIdx">1</span> / <span id="totalQNum">30</span> 题</div>
+    </div>
+
+    <div class="quiz-area">
+        <div class="question-type" id="questionTypeTag">单项选择</div>
+        <div class="question-text" id="questionText">加载考题中...</div>
+        <div id="dynamicArea"></div>
+        <div class="feedback" id="feedbackMsg">💛 点击选项或填写答案，测测你对栩你渝生的真爱指数～</div>
+        <div class="nav-buttons">
+            <button class="btn btn-secondary" id="prevBtn" disabled>🌽 上一题</button>
+            <button class="btn btn-secondary" id="restartBtn">🔄 重新考试</button>
+            <button class="btn btn-primary" id="nextBtn" disabled>下一题 ➡️</button>
+        </div>
+    </div>
+
+    <div id="resultPanel" class="result-panel" style="display: none;"></div>
+    <footer>💕 献给“栩你渝生”最甜的玉米粒们 | 满分300，你是几级学者？ 💕</footer>
+</div>
+
+<script>
+    // ======================= 题库（完全保留原始题目与答案，仅修正语法）=======================
+    // 题型: "choice" 选择题 / "judge" 判断题 / "fill" 填空题（打字输入）
+    const questions = [
+        // ---------- 单项选择 10题 ----------
+        { type: "choice", text: "围读花菜中，田雷和郑朋抽的烟分别是什么？", options: ["芙蓉王；黑兰州", "宽窄；黑兰州", "南京；蓝莓爆珠", "蓝莓爆珠；宽窄"], correct: 1, explanation: "🎵 经典名场面：宽窄与黑兰州，烟与暗号，是独属于他们的默契。" },
+        { type: "choice", text: "栩你渝生官方应援口号是什么？", options: ["栩栩如生，不渝潮汐", "栩光耀眼，坚定不渝", "栩光同行，潮汐不渝", "栩光耀眼，朝夕不渝"], correct: 2, explanation: "🌊 “栩光同行，潮汐不渝”——暗喻彼此是潮汐与月光，永远相伴。" },
+        { type: "choice", text: "花絮中两人初吻在哪个地点？", options: ["天台", "老宅", "玉米地", "办公室"], correct: 0, explanation: "🍃 天台的风见证了最初的悸动。" },
+        { type: "choice", text: "正片中池畏初吻在哪个地点？", options: ["玉米地", "诊所", "冰淇淋店", "天台"], correct: 2, explanation: "🍦 甜甜的冰淇淋味初吻。" },
+        { type: "choice", text: "杀青后的KTV聚会中郑朋唱了哪首歌？", options: ["此生不换", "大城小爱", "同手同脚", "怎么说我不爱你"], correct: 3, explanation: "🎤 《怎么说我不爱你》唱出隐忍深情。" },
+        { type: "choice", text: "在新家花絮中，“跟谁聊天呢”这句话，郑朋一共问了田雷几次？", options: ["1", "2", "3", "4"], correct: 2, explanation: "💬 三次追问，醋意满满，甜到观众心里。" },
+        { type: "choice", text: "“那就这个了”，这句话中田雷所说的“这个”指的是什么？", options: ["古者水果茶", "口球", "玉米", "皮带"], correct: 1, explanation: "🔞 懂的都懂～ 是暧昧升级的暗示。" },
+        { type: "choice", text: "下列句子中，没有表现出喜爱的是？", options: ["哥哥第一次送我衣服", "我只属于你的另一只眼", "新年快乐", "无知的夏天怎么会这么热"], correct: 2, explanation: "🎆 “新年快乐”是礼貌祝福，其他三句暗藏情意。" },
+        { type: "choice", text: "郑朋在直播间播放《Die For You》这首歌，此为何意味？", options: ["回味和田雷的时光", "只是无聊想听", "疏解内心忧伤", "表达对粉丝的喜爱"], correct: 0, explanation: "💽 旋律里藏着对田雷的思念，无声告白。" },
+        { type: "choice", text: "《逆爱》中的心动小曲是？", options: ["Somewhere in Your Eyes", "Broken Promise", "Dust", "Just the Beginning"], correct: 3, explanation: "👀 “Just the Beginning”旋律一响，心动值爆表。" },
+        
+        // ---------- 填空题 7道（打字输入）完全保留原题与答案 ----------
+        { type: "fill", text: "“不敢幸福，______。”", blanks: [{ answerWords: ["等着我吧"] }], explanation: "💘 经典告白：等着我吧，我会给你幸福。" },
+        { type: "fill", text: "“喝水咬管子什么坏习惯啊”，“______”。", blanks: [{ answerWords: ["性欲强"] }], explanation: "😈 直球回答，气氛瞬间暧昧。" },
+        { type: "fill", text: "“我最怕别人碰我心脏了”，“______”。", blanks: [{ answerWords: ["我不怕，碰我的"] }], explanation: "💓 最甜回应：“我不怕，碰我的”，专属宠溺。" },
+        { type: "fill", text: "“你叫______”，“嘿，你是______”。", blanks: [{ answerWords: ["田雷"] }, { answerWords: ["郑朋"] }], multiBlank: true, explanation: "🍭 笨蛋情侣互相叫名字，甜到齁。" },
+        { type: "fill", text: "你的道歉总是这样轻描淡写，“______”。", blanks: [{ answerWords: ["那我就要轻描淡写的原谅你"] }], explanation: "✨ 温柔回应，以柔克刚。" },
+        { type: "fill", text: "我是行者止于岸，“______”。", blanks: [{ answerWords: ["你是蔚然无尽蓝"] }], explanation: "🌊 对仗名句：你是蔚然无尽蓝，永伴身边。" },
+        { type: "fill", text: "我不会说______，也不会说______。", blanks: [{ answerWords: ["永远"] }, { answerWords: ["一直"] }], multiBlank: true, explanation: "💌 深情：不说永远，不说一直，因为爱在当下。" },
+        
+        // ---------- 判断题 13道（补齐总数30，保持原有题目）----------
+        { type: "judge", text: "在跟别人道款时，出于礼貌我们常说“K式K式”。", options: ["正确", "错误"], correct: 0, explanation: "✅ 正确，K式K式是礼貌道歉梗。" },
+        { type: "judge", text: "田雷不想在玉米地和郑朋红高粱。", options: ["正确", "错误"], correct: 1, explanation: "❌ 错误，田雷很愿意红高粱。" },
+        { type: "judge", text: "在池家花絮中，田雷手中拿着的兔刀乐是红色的。", options: ["正确", "错误"], correct: 0, explanation: "✅ 正确，红色兔刀乐是名场面。" },
+        { type: "judge", text: "在玉米地花絮中，田雷觉得老婆的脸比玉米甜。", options: ["正确", "错误"], correct: 0, explanation: "✅ 正确，甜过玉米的告白。" },
+        { type: "judge", text: "在花絮0730-19中，郑朋离开田雷，并说田雷是绿头蝇。", options: ["正确", "错误"], correct: 0, explanation: "✅ 正确，气话“绿头蝇”成经典梗。" },
+        { type: "judge", text: "《逆袭》第二轮花菜在2025年8月25日开始播放。", options: ["正确", "错误"], correct: 0, explanation: "✅ 正确，8月25日首播。" },
+        { type: "judge", text: "诊所花絮中，郑朋从田雷口袋中掏出了一次性内裤、耳机和冰袋。", options: ["正确", "错误"], correct: 0, explanation: "✅ 正确，出差三件套名场面。" },
+        { type: "judge", text: "“卖爆了”表情包出现在新家办证花絮中。", options: ["正确", "错误"], correct: 0, explanation: "✅ 正确，表情包源自办证花絮。" },
+        { type: "judge", text: "在10月30号的手势视频中，用于录制的是郑朋的手机。", options: ["正确", "错误"], correct: 0, explanation: "✅ 正确，郑朋手机记录甜蜜手势。" },
+        { type: "judge", text: "雷朋初识的时间是2024年6月23日。", options: ["正确", "错误"], correct: 0, explanation: "✅ 正确，那是命运的起点。" },
+        { type: "judge", text: "宗门信物卖了1180W”。", options: ["正确", "错误"], correct: 0, explanation: "✅ 正确，真情流露。" },
+        { type: "judge", text: "如果两人第一次合唱的话，歌曲是《我可以》。", options: ["正确", "错误"], correct: 1, explanation: "❌ 错误，第一次合唱是《有点甜》。" },
+        { type: "judge", text: "郑朋养了三只宠物，一只叫大鱼，一只叫小十一，另一个叫田雷。", options: ["正确", "错误"], correct: 0, explanation: "✅ 正确，郑朋多次表达喜欢田雷。" }
+    ];
+    
+    // 确保总题数30（选择题10+填空题7+判断题13=30）
+    // 动态计算总分
+    const TOTAL_QS = questions.length;
+    const MAX_SCORE = TOTAL_QS * 10;
+    
+    let currentIndex = 0;
+    let userAnswers = new Array(TOTAL_QS).fill(null);   // choice/judge存索引，fill存数组
+    let answerStatus = new Array(TOTAL_QS).fill(false);
+    let gameFinished = false;
+    
+    // DOM 元素
+    const questionTypeTag = document.getElementById('questionTypeTag');
+    const questionTextEl = document.getElementById('questionText');
+    const dynamicArea = document.getElementById('dynamicArea');
+    const feedbackMsgEl = document.getElementById('feedbackMsg');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const restartBtn = document.getElementById('restartBtn');
+    const scoreValueSpan = document.getElementById('scoreValue');
+    const currentQIdxSpan = document.getElementById('currentQIdx');
+    const totalQNumSpan = document.getElementById('totalQNum');
+    const resultPanel = document.getElementById('resultPanel');
+    const totalScoreSpan = document.getElementById('totalScore');
+    
+    totalScoreSpan.innerText = MAX_SCORE;
+    totalQNumSpan.innerText = TOTAL_QS;
+    
+    // 标准化字符串（去空格、小写、去标点）
+    function normalize(str) {
+        if (!str) return "";
+        return str.trim().toLowerCase().replace(/[，,。？?！!“”‘’；;：:·~～\s]/g, '');
+    }
+    
+    // 检查填空题答案
+    function checkFillAnswer(q, userFillValues) {
+        if (!q.blanks) return false;
+        if (q.multiBlank) {
+            if (!userFillValues || userFillValues.length !== q.blanks.length) return false;
+            for (let i = 0; i < q.blanks.length; i++) {
+                const userNorm = normalize(userFillValues[i]);
+                let match = false;
+                for (let exp of q.blanks[i].answerWords) {
+                    if (userNorm === normalize(exp)) { match = true; break; }
+                }
+                if (!match) return false;
+            }
+            return true;
+        } else {
+            if (!userFillValues || userFillValues.length === 0) return false;
+            const userNorm = normalize(userFillValues[0]);
+            for (let exp of q.blanks[0].answerWords) {
+                if (userNorm === normalize(exp)) return true;
+            }
+            return false;
+        }
+    }
+    
+    function computeScore() {
+        let score = 0;
+        for (let i = 0; i < TOTAL_QS; i++) {
+            const q = questions[i];
+            const ans = userAnswers[i];
+            if (ans === null) continue;
+            if (q.type === 'choice' || q.type === 'judge') {
+                if (ans === q.correct) score += 10;
+            } else if (q.type === 'fill') {
+                if (checkFillAnswer(q, ans)) score += 10;
+            }
+        }
+        return score;
+    }
+    
+    function updateScoreUI() {
+        scoreValueSpan.innerText = computeScore();
+    }
+    
+    function updateCounterUI() {
+        currentQIdxSpan.innerText = currentIndex + 1;
+    }
+    
+    function getRankByScore(score) {
+        if (score === MAX_SCORE) return "👑 栩你渝生·满分真爱神 👑";
+        if (score >= 270) return "💖 黄金玉米粒 · 雷朋学博士 💖";
+        if (score >= 240) return "✨ 白银学者 · 资深甜玉米 ✨";
+        if (score >= 200) return "🌽 青铜守护者 · 稳稳嗑糖 🌽";
+        return "🌱 萌芽玉米粒 · 继续补课冲呀 🌱";
+    }
+    
+    function finishExam() {
+        gameFinished = true;
+        const finalScore = computeScore();
+        const rank = getRankByScore(finalScore);
+        resultPanel.style.display = "block";
+        resultPanel.innerHTML = `
+            <div class="result-title">🌽 雷朋学结业成绩 🌽</div>
+            <div style="font-size:1.8rem; font-weight:bold; margin:10px 0;">${finalScore} / ${MAX_SCORE}</div>
+            <div style="background:#ffefcf; border-radius:40px; padding:12px; margin:10px 0;">${rank}</div>
+            <div>💛 “栩你渝生，此生不渝” 感谢田雷×郑朋带给我们的热爱 💛</div>
+            <button class="btn restart-special" id="finalRestartBtn" style="margin-top: 16px;">🌽 重新考试 · 为爱补考 🌽</button>
+        `;
+        const finalRestart = document.getElementById('finalRestartBtn');
+        if (finalRestart) finalRestart.addEventListener('click', () => resetGame());
+        // 禁用当前交互
+        const allBtns = document.querySelectorAll('.opt-btn, .submit-fill-btn');
+        allBtns.forEach(btn => btn.disabled = true);
+        const inputs = document.querySelectorAll('.fill-input');
+        inputs.forEach(inp => inp.disabled = true);
+        prevBtn.disabled = true;
+        nextBtn.disabled = true;
+        feedbackMsgEl.innerHTML = "📜 考试结束！点击重新考试即可再次挑战～";
+    }
+    
+    // 渲染当前题目
+    function renderCurrentQuestion() {
+        if (gameFinished) return;
+        const q = questions[currentIndex];
+        let typeName = "";
+        if (q.type === 'choice') typeName = "单项选择";
+        else if (q.type === 'judge') typeName = "判断题";
+        else typeName = "填空题";
+        questionTypeTag.innerText = typeName;
+        questionTextEl.innerHTML = q.text;
+        dynamicArea.innerHTML = '';
+        
+        if (q.type === 'choice' || q.type === 'judge') {
+            const optsDiv = document.createElement('div');
+            optsDiv.className = 'options-area';
+            q.options.forEach((opt, idx) => {
+                const btn = document.createElement('div');
+                btn.className = 'opt-btn';
+                const prefix = String.fromCharCode(65+idx);
+                btn.innerHTML = `<div class="opt-prefix">${prefix}</div><div style="flex:1;">${opt}</div>`;
+                btn.addEventListener('click', () => {
+                    if (answerStatus[currentIndex] || gameFinished) return;
+                    userAnswers[currentIndex] = idx;
+                    answerStatus[currentIndex] = true;
+                    const isCorrect = (idx === q.correct);
+                    if (isCorrect) {
+                        feedbackMsgEl.innerHTML = `✅ 答对啦！ +10分 ✨ ${q.explanation || ''}`;
+                    } else {
+                        const correctAns = q.options[q.correct];
+                        feedbackMsgEl.innerHTML = `❌ 正确答案是：“${correctAns}”。 ${q.explanation || ''}`;
+                    }
+                    updateScoreUI();
+                    document.querySelectorAll('.opt-btn').forEach(btn => btn.disabled = true);
+                    nextBtn.disabled = false;
+                    if (currentIndex === TOTAL_QS-1) nextBtn.innerHTML = '🏁 提交试卷 🏁';
+                    else nextBtn.innerHTML = '下一题 ➡️';
+                });
+                optsDiv.appendChild(btn);
+            });
+            dynamicArea.appendChild(optsDiv);
+            if (answerStatus[currentIndex]) {
+                const selectedIdx = userAnswers[currentIndex];
+                const isCorrect = (selectedIdx === q.correct);
+                if (isCorrect) feedbackMsgEl.innerHTML = `✅ 已作答 +10分 ✨ ${q.explanation || ''}`;
+                else feedbackMsgEl.innerHTML = `📝 已作答，正确答案：“${q.options[q.correct]}”。 ${q.explanation || ''}`;
+                document.querySelectorAll('.opt-btn').forEach(btn => btn.disabled = true);
+                nextBtn.disabled = false;
+                if (currentIndex === TOTAL_QS-1) nextBtn.innerHTML = '🏁 提交试卷 🏁';
+                else nextBtn.innerHTML = '下一题 ➡️';
+            } else {
+                feedbackMsgEl.innerHTML = "💛 点击选项，测测你对栩你渝生的真爱指数～";
+                nextBtn.disabled = true;
+                if (currentIndex === TOTAL_QS-1) nextBtn.innerHTML = '🏁 提交试卷 🏁';
+                else nextBtn.innerHTML = '下一题 ➡️';
+            }
+        } 
+        else if (q.type === 'fill') {
+            const fillContainer = document.createElement('div');
+            fillContainer.className = 'fill-input-group';
+            const blanksCount = q.multiBlank ? q.blanks.length : 1;
+            const savedVals = (userAnswers[currentIndex] && Array.isArray(userAnswers[currentIndex])) ? userAnswers[currentIndex] : new Array(blanksCount).fill('');
+            const inputs = [];
+            for (let i = 0; i < blanksCount; i++) {
+                const blankDiv = document.createElement('div');
+                blankDiv.className = 'blank-item';
+                const label = document.createElement('div');
+                label.className = 'blank-label';
+                label.innerText = `第 ${i+1} 空：`;
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.className = 'fill-input';
+                input.placeholder = '请输入答案...';
+                input.value = savedVals[i] || '';
+                if (answerStatus[currentIndex]) input.disabled = true;
+                blankDiv.appendChild(label);
+                blankDiv.appendChild(input);
+                fillContainer.appendChild(blankDiv);
+                inputs.push(input);
+            }
+            const submitBtn = document.createElement('button');
+            submitBtn.innerText = '✍️ 提交填空答案';
+            submitBtn.className = 'submit-fill-btn';
+            if (answerStatus[currentIndex]) submitBtn.disabled = true;
+            submitBtn.addEventListener('click', () => {
+                if (answerStatus[currentIndex] || gameFinished) return;
+                const currentInputs = inputs.map(inp => inp.value.trim());
+                if (currentInputs.some(v => v === '')) {
+                    feedbackMsgEl.innerHTML = "🌽 请填写完整所有空后再提交～";
+                    return;
+                }
+                userAnswers[currentIndex] = currentInputs;
+                answerStatus[currentIndex] = true;
+                const isCorrect = checkFillAnswer(q, currentInputs);
+                if (isCorrect) {
+                    feedbackMsgEl.innerHTML = `✅ 填空正确！ +10分 ✨ ${q.explanation || ''}`;
+                } else {
+                    let correctHint = '';
+                    if (q.multiBlank) {
+                        correctHint = q.blanks.map((b, idx) => `第${idx+1}空：${b.answerWords[0]}`).join('；');
+                    } else {
+                        correctHint = q.blanks[0].answerWords[0];
+                    }
+                    feedbackMsgEl.innerHTML = `❌ 填空错误。 参考答案：${correctHint}。 ${q.explanation || ''}`;
+                }
+                updateScoreUI();
+                inputs.forEach(inp => inp.disabled = true);
+                submitBtn.disabled = true;
+                nextBtn.disabled = false;
+                if (currentIndex === TOTAL_QS-1) nextBtn.innerHTML = '🏁 提交试卷 🏁';
+                else nextBtn.innerHTML = '下一题 ➡️';
+            });
+            fillContainer.appendChild(submitBtn);
+            dynamicArea.appendChild(fillContainer);
+            
+            if (answerStatus[currentIndex]) {
+                const isCorrect = checkFillAnswer(q, userAnswers[currentIndex]);
+                if (isCorrect) feedbackMsgEl.innerHTML = `✅ 已作答 +10分 ✨ ${q.explanation || ''}`;
+                else {
+                    let correctHint = '';
+                    if (q.multiBlank) {
+                        correctHint = q.blanks.map((b, idx) => `第${idx+1}空：${b.answerWords[0]}`).join('；');
+                    } else {
+                        correctHint = q.blanks[0].answerWords[0];
+                    }
+                    feedbackMsgEl.innerHTML = `📝 已作答，参考答案：${correctHint}。 ${q.explanation || ''}`;
+                }
+                nextBtn.disabled = false;
+                if (currentIndex === TOTAL_QS-1) nextBtn.innerHTML = '🏁 提交试卷 🏁';
+                else nextBtn.innerHTML = '下一题 ➡️';
+            } else {
+                feedbackMsgEl.innerHTML = "✏️ 在空白处输入答案，点击提交～ 完全正确才能得分哟！";
+                nextBtn.disabled = true;
+                if (currentIndex === TOTAL_QS-1) nextBtn.innerHTML = '🏁 提交试卷 🏁';
+                else nextBtn.innerHTML = '下一题 ➡️';
+            }
+        }
+        updateCounterUI();
+        prevBtn.disabled = (currentIndex === 0);
+    }
+    
+    function onNextOrFinish() {
+        if (gameFinished) return;
+        if (!answerStatus[currentIndex]) {
+            feedbackMsgEl.innerHTML = "🌽 请先完成本题（选择题点击选项，填空题提交答案）再继续～";
+            return;
+        }
+        if (currentIndex === TOTAL_QS - 1) {
+            finishExam();
+            return;
+        }
+        currentIndex++;
+        renderCurrentQuestion();
+    }
+    
+    function onPrev() {
+        if (gameFinished) return;
+        if (currentIndex > 0) {
+            currentIndex--;
+            renderCurrentQuestion();
+        }
+    }
+    
+    function resetGame() {
+        gameFinished = false;
+        currentIndex = 0;
+        userAnswers = new Array(TOTAL_QS).fill(null);
+        answerStatus = new Array(TOTAL_QS).fill(false);
+        resultPanel.style.display = "none";
+        updateScoreUI();
+        renderCurrentQuestion();
+        prevBtn.disabled = true;
+        nextBtn.disabled = false;
+        feedbackMsgEl.innerHTML = "🌽 考试已重置！快来展现你对田雷×郑朋的真爱吧～";
+    }
+    
+    function bindEvents() {
+        nextBtn.addEventListener('click', onNextOrFinish);
+        prevBtn.addEventListener('click', onPrev);
+        restartBtn.addEventListener('click', resetGame);
+    }
+    
+    function createCornBg() {
+        const container = document.getElementById('cornBg');
+        setInterval(() => {
+            if (container.children.length > 45) return;
+            const corn = document.createElement('div');
+            corn.classList.add('corn');
+            corn.innerHTML = ['🌽','🌾','🍿','💛','✨'][Math.floor(Math.random()*5)];
+            corn.style.left = Math.random() * 100 + '%';
+            corn.style.fontSize = (Math.random() * 20 + 12) + 'px';
+            corn.style.animationDuration = (Math.random() * 7 + 6) + 's';
+            corn.style.opacity = Math.random() * 0.3 + 0.1;
+            container.appendChild(corn);
+            setTimeout(() => corn.remove(), 9000);
+        }, 1200);
+    }
+    
+    function init() {
+        bindEvents();
+        resetGame();
+        createCornBg();
+    }
+    
+    init();
+</script>
+</body>
+</html>

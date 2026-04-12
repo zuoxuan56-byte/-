@@ -1,0 +1,1088 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>🌽 甜玉米乐园 | 田栩宁 × 梓渝 粉丝俱乐部</title>
+    <!-- Font Awesome 6 免费图标库 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>/*操！！！！！*/
+        /* 样式保持不变，此处省略（与用户提供的完全相同） */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Poppins', system-ui, sans-serif;
+        }
+
+        :root {
+            --corn-yellow: #FFD966;
+            --corn-gold: #F7B32B;
+            --corn-green: #8FBC6E;
+            --sweet-cream: #FFF8E7;
+            --soft-brown: #B97F44;
+            --shadow-card: 0 12px 28px rgba(0, 0, 0, 0.08);
+            --border-radius-xl: 28px;
+        }
+
+        body {
+            background-size: cover;
+            background-position: center center;
+            background-attachment: fixed;
+            transition: background-image 0.5s ease;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 248, 225, 0.72);
+            backdrop-filter: blur(4px);
+            z-index: -1;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px 24px 40px;
+        }
+
+        /* 导航栏 */
+        .navbar {
+            background: rgba(255, 252, 235, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 60px;
+            margin-bottom: 30px;
+            padding: 0 20px;
+            box-shadow: var(--shadow-card);
+            border: 1px solid rgba(247, 179, 43, 0.4);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            gap: 10px;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            flex: 1;
+            justify-content: space-around;
+            gap: 8px;
+        }
+
+        .nav-item {
+            flex: 1;
+            text-align: center;
+            min-width: 80px;
+        }
+
+        .nav-link {
+            display: block;
+            padding: 14px 8px;
+            font-weight: bold;
+            font-size: 1rem;
+            text-decoration: none;
+            color: #5a3e1f;
+            transition: all 0.2s;
+            letter-spacing: 2px;
+            border-radius: 40px;
+            white-space: nowrap;
+        }
+
+        .nav-link i { margin-right: 6px; }
+        .nav-link:hover {
+            background: rgba(247, 179, 43, 0.2);
+            color: var(--corn-gold);
+            transform: translateY(-2px);
+        }
+        .nav-link.active {
+            background: var(--corn-gold);
+            color: white;
+            box-shadow: 0 4px 12px rgba(247, 179, 43, 0.4);
+        }
+
+        .user-bar {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-shrink: 0;
+            margin-left: 16px;
+        }
+
+        .btn-corn {
+            background: var(--corn-gold);
+            border: none;
+            padding: 6px 18px;
+            border-radius: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+            color: #3b2a1f;
+        }
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--corn-gold);
+        }
+
+        /* 页面容器 */
+        .page { display: none; animation: fadeIn 0.3s ease; }
+        .active-page { display: block; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px);}
+            to { opacity: 1; transform: translateY(0);}
+        }
+
+        /* 卡片样式 */
+        .card {
+            background: rgba(255, 252, 240, 0.92);
+            backdrop-filter: blur(2px);
+            border-radius: var(--border-radius-xl);
+            padding: 24px;
+            margin-bottom: 28px;
+            box-shadow: var(--shadow-card);
+            border: 1px solid rgba(247, 179, 43, 0.3);
+        }
+        .card h2 {
+            font-size: 1.7rem;
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-left: 6px solid var(--corn-gold);
+            padding-left: 16px;
+            color: #5a3e1f;
+        }
+
+        /* 首页双栏布局 */
+        .home-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 28px;
+        }
+
+        /* 日历 */
+        .calendar {
+            background: #fffef7;
+            border-radius: 24px;
+            padding: 16px;
+            text-align: center;
+        }
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 16px;
+            font-weight: bold;
+        }
+        .calendar-weekdays {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            margin-bottom: 8px;
+            color: #b97f44;
+        }
+        .calendar-days {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 4px;
+        }
+        .calendar-day {
+            padding: 8px;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        .calendar-day.today {
+            background: var(--corn-gold);
+            color: white;
+        }
+
+        /* 照片墙 */
+        .photo-wall {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+        }
+        .photo-wall img {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 24px;
+            border: 2px solid var(--corn-gold);
+            transition: transform 0.2s;
+        }
+        .photo-wall img:hover { transform: scale(1.05); }
+
+        /* 横向滚动区 (动漫专场) */
+        .horizontal-scroll {
+            display: flex;
+            overflow-x: auto;
+            gap: 16px;
+            padding: 12px 0;
+            scrollbar-width: thin;
+        }
+        .horizontal-scroll img {
+            width: 140px;
+            height: 140px;
+            object-fit: cover;
+            border-radius: 20px;
+            border: 2px solid var(--corn-gold);
+            flex-shrink: 0;
+        }
+
+        /* 倒计时自定义 */
+        .countdown-custom {
+            background: #fff9e8;
+            border-radius: 28px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        .countdown-number {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #c97e2a;
+        }
+
+        /* 音乐平台按钮组 */
+        .music-platforms {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin: 15px 0;
+        }
+        .music-btn {
+            background: #f3e1b3;
+            padding: 8px 20px;
+            border-radius: 50px;
+            text-decoration: none;
+            color: #5a3e1f;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+        .music-btn:hover { background: var(--corn-gold); }
+
+        /* 讨论区样式 */
+        .post-item {
+            background: #fffcf0;
+            border-radius: 20px;
+            padding: 12px;
+            margin-bottom: 12px;
+            border-left: 5px solid var(--corn-gold);
+        }
+        .delete-post {
+            text-align: right;
+            font-size: 0.7rem;
+            color: #b97f44;
+            cursor: pointer;
+        }
+
+        /* 语录墙 - 便签样式 */
+        .quote-item {
+            background: #FFF9E8;
+            padding: 12px 16px;
+            border-radius: 20px;
+            margin-bottom: 12px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+            transition: transform 0.1s;
+            cursor: pointer;
+            position: relative;
+            border-left: 8px solid var(--corn-gold);
+        }
+        .quote-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+        }
+        .quote-text {
+            font-weight: 500;
+            word-break: break-word;
+        }
+        .quote-meta {
+            font-size: 0.7rem;
+            margin-top: 8px;
+            text-align: right;
+            opacity: 0.7;
+        }
+
+        /* 作品卡片 */
+        .work-card {
+            background: #fffef5;
+            border-radius: 20px;
+            padding: 12px;
+            margin-bottom: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid #f0cf8c;
+        }
+        .work-info {
+            flex: 1;
+        }
+        .work-title {
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        .work-author {
+            font-size: 0.8rem;
+            color: #b97f44;
+        }
+        .work-actions button {
+            background: none;
+            border: none;
+            color: var(--corn-gold);
+            font-size: 1.2rem;
+            cursor: pointer;
+            margin-left: 8px;
+        }
+        .upload-form {
+            background: #fff4e0;
+            padding: 16px;
+            border-radius: 24px;
+            margin-top: 20px;
+        }
+        .upload-form input, .upload-form textarea, .upload-form select {
+            width: 100%;
+            padding: 8px;
+            margin: 8px 0;
+            border-radius: 40px;
+            border: 1px solid #f0cf8c;
+        }
+
+        /* 模态框 */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .modal-content {
+            background: #fffef7;
+            border-radius: 32px;
+            padding: 24px;
+            max-width: 90%;
+            width: 500px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        .modal-content pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            font-family: inherit;
+            font-size: 14px;
+            line-height: 1.6;
+            background: #fef9e6;
+            padding: 16px;
+            border-radius: 20px;
+            margin: 0;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            color: #735e36;
+        }
+
+        @media (max-width: 800px) {
+            .home-grid { grid-template-columns: 1fr; }
+            .nav-link { font-size: 0.75rem; letter-spacing: 1px; padding: 12px 4px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- 导航栏 -->
+    <div class="navbar">
+        <ul class="nav-menu">
+            <li class="nav-item"><a href="#" class="nav-link active" data-page="home"><i class="fas fa-home"></i> 首页</a></li>
+            <li class="nav-item"><a href="#" class="nav-link" data-page="music"><i class="fas fa-music"></i> 音乐馆</a></li>
+            <li class="nav-item"><a href="#" class="nav-link" data-page="community"><i class="fas fa-comments"></i> 玉米地</a></li>
+            <li class="nav-item"><a href="#" class="nav-link" data-page="gallery"><i class="fas fa-images"></i> 藏宝阁</a></li>
+        </ul>
+        <div class="user-bar">
+            <span id="userGreeting" style="font-weight: bold;"></span>
+            <button id="navLoginBtn" class="btn-corn">登录</button>
+            <button id="logoutBtn" class="btn-corn btn-outline" style="display:none;">退出</button>
+        </div>
+    </div>
+
+    <!-- ========= 首页 ========= -->
+    <div id="homePage" class="page active-page">
+        <div class="hero" style="text-align: center; margin-bottom: 30px;">
+            <h1 style="font-size: 2.2rem;">
+                <span style="color: #FF8C42;">🌽</span> 欢迎来到田栩宁 & 梓渝的甜蜜世界 
+                <span style="color: #FF8C42;">🌽</span>
+            </h1>
+            <p>这里是属于“甜玉米”们的专属聚集地</p>
+        </div>
+        <div class="home-grid">
+            <div class="card">
+                <h2><i class="fas fa-calendar-alt"></i> 甜蜜日历</h2>
+                <div id="calendar" class="calendar"></div>
+                <div style="margin-top: 20px;">
+    <h3><i class="fas fa-camera"></i> 珍藏瞬间</h3>
+    <div class="photo-wall" id="photoWall"></div>
+    <button id="uploadPhotoBtn" class="btn-corn" style="margin-top: 12px;"><i class="fas fa-folder-open"></i> 选择文件夹（或图片）</button>
+    <input type="file" id="photoInput" accept="image/*" multiple style="display: none;">
+    <p style="font-size: 0.8rem; margin-top: 8px; color: #b97f44;">✨ 支持选择整个文件夹（Chrome/Edge），自动读取所有图片，替换原有照片 ✨</p>
+</div>
+            </div>
+            <div class="card">
+                <h2><i class="fas fa-hourglass-half"></i> 专属纪念日</h2>
+                <div class="countdown-custom">
+                    <label>📅 选择日期：</label>
+                    <input type="date" id="countdownDatePicker" style="width: 100%; margin: 10px 0; padding: 8px; border-radius: 40px;">
+                    <button id="setCountdownBtn" class="btn-corn">创建倒计时</button>
+                    <div id="customCountdownDisplay" class="countdown-number" style="margin-top: 15px;">尚未设置纪念日</div>
+                </div>
+                <div class="upload-bg">
+                    <label>🎨 自定义背景：</label>
+                    <input type="file" id="bgUploadInput" accept="image/*" style="margin: 8px 0;">
+                    <button id="applyBgBtn" class="btn-corn">应用背景</button>
+                    <button id="randomBgBtn" class="btn-corn btn-outline">随机壁纸</button>
+                </div>
+                <p style="font-size: 0.8rem; margin-top: 12px;">💡 上传图片即可设为专属背景，倒计时记录你们相遇的每一天~</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========= 音乐馆 ========= -->
+    <div id="musicPage" class="page">
+        <div class="card">
+            <h2><i class="fas fa-headphones"></i> 音乐留声机 · 田栩宁</h2>
+            <div class="music-platforms">
+                <a href="https://music.163.com/#/artist?id=100123679" target="_blank" class="music-btn"><i class="fab fa-napster"></i> 网易云音乐</a>
+                <a href="https://y.qq.com/n/ryqq_v2/singer/004d3KQr3a6m2F" target="_blank" class="music-btn"><i class="fab fa-qq"></i> QQ音乐</a>
+                <a href="https://www.kugou.com/yy/html/search.html#searchType=song&searchKeyWord=%E7%94%B0%E6%A0%A9%E5%AE%81" target="_blank" class="music-btn"><i class="fas fa-music"></i> 酷狗音乐</a>
+            </div>
+            <p style="text-align: center;">🎵 直达田栩宁官方艺人主页</p>
+        </div>
+        <div class="card">
+            <h2><i class="fas fa-headphones"></i> 音乐留声机 · 梓渝</h2>
+            <div class="music-platforms">
+                <a href="https://music.163.com/#/artist?id=12940821" target="_blank" class="music-btn"><i class="fab fa-napster"></i> 网易云音乐</a>
+                <a href="https://y.qq.com/n/ryqq_v2/singer/002Mp50T4HjMya" target="_blank" class="music-btn"><i class="fab fa-qq"></i> QQ音乐</a>
+                <a href="https://www.kugou.com/yy/html/search.html#searchType=song&searchKeyWord=%E6%A2%93%E7%91%9C" target="_blank" class="music-btn"><i class="fas fa-music"></i> 酷狗音乐</a>
+            </div>
+            <p style="text-align: center;">🎶 点击跳转，收听梓渝的温暖嗓音</p>
+        </div>
+    </div>
+
+    <!-- ========= 玉米地（讨论区+语录墙+小游戏）========= -->
+    <div id="communityPage" class="page">
+        <div class="grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 28px;">
+            <div class="card">
+                <h2><i class="fas fa-comments"></i> 自由讨论</h2>
+                <div id="postsList" style="max-height: 350px; overflow-y: auto;"></div>
+                <div id="newPostForm" style="display: none;">
+                    <input type="text" id="postTitle" placeholder="标题">
+                    <textarea id="postContent" rows="2" placeholder="分享关于田栩宁&梓渝的点滴..."></textarea>
+                    <button id="submitPostBtn" class="btn-corn">🌽 发布</button>
+                </div>
+                <div id="loginToPostMsg" style="text-align: center; color: #b97f44; padding: 12px;">🔒 登录后即可发帖讨论</div>
+            </div>
+            <div>
+                <div class="card">
+                    <h2><i class="fas fa-comment-dots"></i> 语录墙 · 便签寄语</h2>
+                    <div id="quoteWall" style="max-height: 250px; overflow-y: auto;"></div>
+                    <div style="display: flex; gap: 8px; margin-top: 12px;">
+                        <input type="text" id="quoteInput" placeholder="写下你的祝福..." style="flex:2;">
+                        <select id="quoteColorSelect">
+                            <option value="#F7B32B">🌽 玉米金</option>
+                            <option value="#E67373">🍓 草莓粉</option>
+                            <option value="#6FBF4C">🍃 清新绿</option>
+                            <option value="#7B68EE">💜 梦幻紫</option>
+                        </select>
+                        <button id="addQuoteBtn" class="btn-corn">上墙</button>
+                    </div>
+                </div>
+                <div class="card">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <h2><i class="fas fa-gamepad"></i> 玉米接住游戏</h2>
+                        <button id="enlargeGameBtn" class="btn-corn" style="font-size:0.9rem;"><i class="fas fa-expand"></i> 放大游戏</button>
+                    </div>
+                    <iframe id="gameIframe" src="game.html" style="width:100%; height:450px; border:none; border-radius:20px; background:#FFF9E8;" title="玉米游戏"></iframe>
+                    <p style="font-size:0.8rem; text-align:center; margin-top:10px;">⬆️ 在游戏中接住玉米，挑战高分吧！</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 全屏游戏模态框 -->
+    <div id="fullscreenGameModal" class="modal" style="display: none;">
+        <div class="modal-fullscreen">
+            <div style="display: flex; justify-content: flex-end; padding: 12px 20px;">
+                <button id="closeFullscreenBtn" class="btn-corn"><i class="fas fa-times"></i> 关闭</button>
+            </div>
+            <iframe id="fullscreenIframe" src="4.0游戏2.html" style="width:100%; height:calc(100% - 70px); border:none; background:#FFF9E8; border-radius:20px;"></iframe>
+        </div>
+    </div>
+
+    <style>
+        .modal-fullscreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.92);
+            z-index: 2000;
+            display: flex;
+            flex-direction: column;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        .modal-fullscreen iframe {
+            flex: 1;
+            width: 100%;
+            border: none;
+        }
+        .modal {
+            z-index: 1000;
+        }
+    </style>
+
+   <!-- ========= 藏宝阁（小说/漫画/动漫） ========= -->
+<div id="galleryPage" class="page">
+    <!-- 小说卡片 -->
+    <div class="card">
+        <h2><i class="fas fa-book-open"></i> 同人小说 · 点击阅读完整内容</h2>
+
+        <!-- 外部小说站链接 -->
+        <div style="text-align: center; margin-bottom: 20px; padding: 12px; background: #fff4e0; border-radius: 20px;">
+            <a href="novel.html" target="_blank" class="btn-corn" style="display: inline-block; text-decoration: none; font-size: 1rem;">
+                <i class="fas fa-external-link-alt"></i> 📚 前往完整小说库
+            </a>
+            <p style="font-size: 0.8rem; margin-top: 8px; color: #b97f44;">✨ 更多小说作品，欢迎访问我们的专属小说站 ✨</p>
+        </div>
+
+        <div id="novelList"></div>
+        <div class="upload-form">
+            <h3>📝 上传你的小说</h3>
+            <input type="text" id="novelTitle" placeholder="小说标题">
+            <textarea id="novelContent" rows="4" placeholder="小说正文..."></textarea>
+            <button id="uploadNovelBtn" class="btn-corn">发布小说</button>
+        </div>
+    </div>
+
+    <!-- 漫画卡片（无默认漫画，新增视频链接） -->
+    <div class="card">
+        <h2><i class="fas fa-dragon"></i> 漫画剧场 · 点击图片查看完整漫画</h2>
+        <div id="comicList"></div>
+        <div class="upload-form">
+            <h3>🖼️ 上传你的漫画（图片）</h3>
+            <input type="text" id="comicTitle" placeholder="漫画标题">
+            <input type="file" id="comicImage" accept="image/*">
+            <button id="uploadComicBtn" class="btn-corn">发布漫画</button>
+        </div>
+
+        <!-- 新增视频链接区域（覆盖原来漫画下方的区域） -->
+        <div style="margin-top: 20px; padding: 16px; background: #fff4e0; border-radius: 24px;">
+            <h3><i class="fas fa-video"></i> 相关视频推荐</h3>
+            <div style="display: flex; flex-wrap: wrap; gap: 12px; margin-top: 12px;">
+                <a href="https://pan.baidu.com/s/185IT0BnZ_cuAbRKZObYSPA?pwd=1111 " target="_blank" class="btn-corn" style="text-decoration: none;">🎬 雷朋吃嘴子40分钟纯享版</a>
+                <a href="https://pan.baidu.com/s/1BPEZoCAZKPOBeNCU4YYJwA?pwd=1111 " target="_blank" class="btn-corn" style="text-decoration: none;">📺 雷朋51分钟kiss</a>
+                <a href="https://pan.baidu.com/s/1QL_P0hYMzG6UC5YzgPlmNA?pwd=1111 " target="_blank" class="btn-corn" style="text-decoration: none;">🎤 雷朋109个吻合集</a>
+                 <a href="https://pan.baidu.com/s/1_Ac9E8Kdq36oF33rIWgN9g?pwd=1111  " target="_blank" class="btn-corn" style="text-decoration: none;">🎬 办证25分钟纯享</a>
+                <a href="https://pan.baidu.com/s/1Aw9ganhq-s1L3SuxhwYYyA?pwd=1111  " target="_blank" class="btn-corn" style="text-decoration: none;">📺 诊所38分钟纯享</a>
+                <a href="https://pan.baidu.com/s/184bIFRE7dbpH3a6lEhpofA?pwd=1111  " target="_blank" class="btn-corn" style="text-decoration: none;">🎤 办公室54分钟纯享</a>
+                 <a href="https://pan.baidu.com/s/1rvTNuSfVZyWzkPnCQ0z9Eg?pwd=1111   " target="_blank" class="btn-corn" style="text-decoration: none;">🎬 池畏双人cut（只想看剧里他俩的部分可存）</a>
+                <a href="https://pan.baidu.com/s/1Aw9ganhq-s1L3SuxhwYYyA?pwd=1111  " target="_blank" class="btn-corn" style="text-decoration: none;">📺 官方剧照合集</a>
+                <a href="https://pan.baidu.com/s/184bIFRE7dbpH3a6lEhpofA?pwd=1111  " target="_blank" class="btn-corn" style="text-decoration: none;">🎤 千条花絮完整版大合集（1108条）</a>
+                 <a href="https://pan.baidu.com/s/1_Ac9E8Kdq36oF33rIWgN9g?pwd=1111  " target="_blank" class="btn-corn" style="text-decoration: none;">🎬梓渝微博考古</a>
+                <a href="https://pan.baidu.com/s/1Aw9ganhq-s1L3SuxhwYYyA?pwd=1111  " target="_blank" class="btn-corn" style="text-decoration: none;">📺 田栩宁出道至今相关素材集合(影视作品/微博/杂志/直播/歌/商务)</a>
+                <a href="https://pan.quark.cn/s/68c8bd17b1e8 " target="_blank" class="btn-corn" style="text-decoration: none;">🎤 梓渝QQ音乐存档</a>
+                <a href="https://pan.quark.cn/s/732705afd0fc" target="_blank" class="btn-corn" style="text-decoration: none;">🎤 田栩宁直播</a>
+            </div>
+            <p style="font-size: 0.8rem; margin-top: 10px;">✨ 更多精彩视频，点击链接观看 ✨</p>
+        </div>
+    </div>
+
+    <!-- 动漫卡片（保持原样） -->
+    <div class="card">
+        <h2><i class="fas fa-tv"></i> 动漫专场 · 横向滚动</h2>
+        <div class="horizontal-scroll" id="animeScroll"></div>
+        <div class="upload-form">
+            <h3>🎬 上传你的动漫作品（图片）</h3>
+            <input type="text" id="animeTitle" placeholder="作品标题">
+            <input type="file" id="animeImage" accept="image/*">
+            <button id="uploadAnimeBtn" class="btn-corn">发布动漫</button>
+        </div>
+    </div>
+</div>
+    <footer>
+        <p>🌽 甜玉米乐园 · 永远热爱田栩宁 & 梓渝 | 粉丝共建空间</p>
+    </footer>
+</div>
+
+<!-- 登录/注册模态框 -->
+<div id="authModal" class="modal">
+    <div class="modal-content">
+        <h3 id="modalTitle">登录</h3>
+        <input type="text" id="authUser" placeholder="用户名">
+        <input type="password" id="authPass" placeholder="密码">
+        <button id="authConfirmBtn" class="btn-corn">确认</button>
+        <button id="switchAuthModeBtn" style="background: none; border: none; color: var(--corn-gold); margin-top: 8px;">没有账号？去注册</button>
+        <button id="closeModalBtn" style="margin-top: 8px;">取消</button>
+        <p id="authMsg" style="color:red; font-size:12px;"></p>
+    </div>
+</div>
+
+<!-- 查看完整内容模态框 -->
+<div id="viewModal" class="modal">
+    <div class="modal-content">
+        <h3 id="viewTitle"></h3>
+        <div id="viewBody" style="margin: 16px 0; max-height: 60vh; overflow-y: auto;"></div>
+        <button id="closeViewModal" class="btn-corn">关闭</button>
+    </div>
+</div>
+
+<script>
+    // ---------- 存储 ----------
+    const STORAGE_USERS = "sweetcorn_users";
+    const STORAGE_POSTS = "sweetcorn_posts";
+    const STORAGE_QUOTES = "sweetcorn_quotes";
+    const STORAGE_COUNTDOWN = "sweetcorn_countdown";
+    const STORAGE_BG = "sweetcorn_bg";
+    const STORAGE_PHOTOS = "sweetcorn_photos";
+    const STORAGE_NOVELS = "sweetcorn_novels";
+    const STORAGE_COMICS = "sweetcorn_comics";
+    const STORAGE_ANIMES = "sweetcorn_animes";
+
+    let currentUser = null;
+    let users = JSON.parse(localStorage.getItem(STORAGE_USERS)) || [];
+    let posts = JSON.parse(localStorage.getItem(STORAGE_POSTS)) || [];
+    let quotes = JSON.parse(localStorage.getItem(STORAGE_QUOTES)) || [];
+    let customCountdown = localStorage.getItem(STORAGE_COUNTDOWN) ? new Date(localStorage.getItem(STORAGE_COUNTDOWN)) : null;
+    let userPhotos = JSON.parse(localStorage.getItem(STORAGE_PHOTOS)) || [];
+    let novels = JSON.parse(localStorage.getItem(STORAGE_NOVELS)) || [];
+    let comics = JSON.parse(localStorage.getItem(STORAGE_COMICS)) || [];
+    let animes = JSON.parse(localStorage.getItem(STORAGE_ANIMES)) || [];
+
+    function saveUsers() { localStorage.setItem(STORAGE_USERS, JSON.stringify(users)); }
+    function savePosts() { localStorage.setItem(STORAGE_POSTS, JSON.stringify(posts)); }
+    function saveQuotes() { localStorage.setItem(STORAGE_QUOTES, JSON.stringify(quotes)); }
+    function savePhotos() { localStorage.setItem(STORAGE_PHOTOS, JSON.stringify(userPhotos)); }
+    function saveNovels() { localStorage.setItem(STORAGE_NOVELS, JSON.stringify(novels)); }
+    function saveComics() { localStorage.setItem(STORAGE_COMICS, JSON.stringify(comics)); }
+    function saveAnimes() { localStorage.setItem(STORAGE_ANIMES, JSON.stringify(animes)); }
+
+    function escapeHtml(str) { if(!str) return ""; return str.replace(/[&<>]/g, m => m==='&'?'&amp;': m==='<'?'&lt;':'&gt;'); }
+
+    // 渲染讨论区
+    function renderPosts() {
+        const container = document.getElementById("postsList");
+        if(posts.length===0) { container.innerHTML = "<p>暂无帖子，快来发言~</p>"; return; }
+        let html = "";
+        [...posts].reverse().forEach(post => {
+            html += `<div class="post-item"><div class="post-title">🌽 ${escapeHtml(post.title)}</div><div class="post-author">👤 ${escapeHtml(post.author)} · ${post.time}</div><div class="post-content">${escapeHtml(post.content)}</div>${(currentUser && currentUser.username===post.author) ? `<div class="delete-post" data-id="${post.id}"><i class="fas fa-trash-alt"></i> 删除</div>` : ""}</div>`;
+        });
+        container.innerHTML = html;
+        document.querySelectorAll(".delete-post").forEach(el => {
+            el.addEventListener("click", (e) => {
+                posts = posts.filter(p => p.id !== parseInt(el.dataset.id));
+                savePosts(); renderPosts();
+            });
+        });
+    }
+
+    // 渲染语录墙
+    function renderQuotes() {
+        const wall = document.getElementById("quoteWall");
+        if(quotes.length===0) { wall.innerHTML = "<p>暂无祝福~</p>"; return; }
+        let html = "";
+        quotes.forEach(q => {
+            html += `<div class="quote-item" style="background-color: ${q.color}20; border-left-color: ${q.color};" data-text="${escapeHtml(q.text)}" data-time="${q.time}">
+                        <div class="quote-text" style="color:${q.color};">“ ${escapeHtml(q.text)} ”</div>
+                        <div class="quote-meta">${q.time} <span class="quote-del" data-id="${q.id}"><i class="fas fa-times-circle"></i> 移除</span></div>
+                    </div>`;
+        });
+        wall.innerHTML = html;
+        document.querySelectorAll(".quote-item").forEach(el => {
+            el.addEventListener("click", (e) => {
+                if(e.target.classList.contains("quote-del")) return;
+                const text = el.dataset.text;
+                const time = el.dataset.time;
+                alert(`📝 便签寄语\n\n${text}\n\n—— 发布于 ${time}`);
+            });
+        });
+        document.querySelectorAll(".quote-del").forEach(el => {
+            el.addEventListener("click", (e) => {
+                e.stopPropagation();
+                quotes = quotes.filter(q => q.id !== parseInt(el.dataset.id));
+                saveQuotes(); renderQuotes();
+            });
+        });
+    }
+
+    // 藏宝阁渲染 - 小说标题改为链接
+    function renderNovels() {
+        const container = document.getElementById("novelList");
+        if (!container) return;
+        if (novels.length === 0) {
+            container.innerHTML = '<p style="text-align:center;">暂无小说，快来上传你的作品吧~</p>';
+            return;
+        }
+        let html = '';
+        novels.forEach(novel => {
+            html += `
+                <div class="work-card">
+                    <div class="work-info">
+                        <div class="work-title">
+                            <a href="#" class="novel-link" data-id="${novel.id}" style="color: var(--corn-gold); text-decoration: none; font-weight: bold;">
+                                📖 ${escapeHtml(novel.title)}
+                            </a>
+                        </div>
+                        <div class="work-author">by ${escapeHtml(novel.author)}</div>
+                    </div>
+                    <div class="work-actions">
+                        ${currentUser && currentUser.username === novel.author ? `<button class="del-novel" data-id="${novel.id}"><i class="fas fa-trash"></i></button>` : ''}
+                    </div>
+                </div>
+            `;
+        });
+        container.innerHTML = html;
+
+        // 绑定小说链接点击
+        document.querySelectorAll('.novel-link').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const id = parseInt(link.dataset.id);
+                const novel = novels.find(n => n.id === id);
+                if (novel) {
+                    showModal(novel.title, `<pre>${escapeHtml(novel.content)}</pre>`);
+                }
+            });
+        });
+        // 绑定删除按钮
+        document.querySelectorAll('.del-novel').forEach(btn => {
+            btn.addEventListener('click', () => {
+                if (confirm('确定要删除这篇小说吗？')) {
+                    novels = novels.filter(n => n.id !== parseInt(btn.dataset.id));
+                    saveNovels();
+                    renderNovels();
+                }
+            });
+        });
+    }
+
+    function renderComics() {
+        const container = document.getElementById("comicList");
+        let html = "";
+        comics.forEach(comic => {
+            html += `<div class="work-card"><div class="work-info"><div class="work-title">🖼️ ${escapeHtml(comic.title)}</div><div class="work-author">by ${escapeHtml(comic.author)}</div></div><div class="work-actions"><button class="view-comic" data-id="${comic.id}"><i class="fas fa-eye"></i> 查看</button>${currentUser && currentUser.username===comic.author ? `<button class="del-comic" data-id="${comic.id}"><i class="fas fa-trash"></i></button>` : ""}</div></div>`;
+        });
+        container.innerHTML = html;
+        document.querySelectorAll(".view-comic").forEach(btn => {
+            btn.addEventListener("click", () => {
+                const comic = comics.find(c => c.id === parseInt(btn.dataset.id));
+                if(comic) showModal(comic.title, `<img src="${comic.image}" style="max-width:100%; border-radius:20px;">`);
+            });
+        });
+        document.querySelectorAll(".del-comic").forEach(btn => {
+            btn.addEventListener("click", () => {
+                comics = comics.filter(c => c.id !== parseInt(btn.dataset.id));
+                saveComics(); renderComics();
+            });
+        });
+    }
+
+    function renderAnimes() {
+        const container = document.getElementById("animeScroll");
+        let html = "";
+        animes.forEach(anime => {
+            html += `<div style="text-align:center; flex-shrink:0;"><img src="${anime.image}" style="width:140px; height:140px; object-fit:cover; border-radius:20px; border:2px solid var(--corn-gold); cursor:pointer;" data-id="${anime.id}" class="view-anime"><div style="font-size:0.8rem;">${escapeHtml(anime.title)}<br><span style="font-size:0.7rem;">by ${escapeHtml(anime.author)}</span></div>${currentUser && currentUser.username===anime.author ? `<button class="del-anime" data-id="${anime.id}" style="background:none; border:none; color:red;"><i class="fas fa-trash"></i></button>` : ""}</div>`;
+        });
+        container.innerHTML = html;
+        document.querySelectorAll(".view-anime").forEach(img => {
+            img.addEventListener("click", () => {
+                const anime = animes.find(a => a.id === parseInt(img.dataset.id));
+                if(anime) showModal(anime.title, `<img src="${anime.image}" style="max-width:100%; border-radius:20px;">`);
+            });
+        });
+        document.querySelectorAll(".del-anime").forEach(btn => {
+            btn.addEventListener("click", (e) => {
+                e.stopPropagation();
+                animes = animes.filter(a => a.id !== parseInt(btn.dataset.id));
+                saveAnimes(); renderAnimes();
+            });
+        });
+    }
+
+    function showModal(title, bodyHtml) {
+        document.getElementById("viewTitle").innerText = title;
+        document.getElementById("viewBody").innerHTML = bodyHtml;
+        document.getElementById("viewModal").style.display = "flex";
+    }
+
+    // 用户系统
+    function updateAuthUI() {
+        const greeting = document.getElementById("userGreeting");
+        const logoutBtn = document.getElementById("logoutBtn");
+        const loginBtn = document.getElementById("navLoginBtn");
+        const newPostForm = document.getElementById("newPostForm");
+        const loginMsg = document.getElementById("loginToPostMsg");
+        if(currentUser){
+            greeting.innerText = `🌽 ${currentUser.username}`;
+            logoutBtn.style.display = "inline-block";
+            loginBtn.innerText = "我的主页";
+            if(newPostForm) newPostForm.style.display = "block";
+            if(loginMsg) loginMsg.style.display = "none";
+        } else {
+            greeting.innerText = "";
+            logoutBtn.style.display = "none";
+            loginBtn.innerText = "登录";
+            if(newPostForm) newPostForm.style.display = "none";
+            if(loginMsg) loginMsg.style.display = "block";
+        }
+        renderPosts(); renderNovels(); renderComics(); renderAnimes();
+    }
+
+    // 登录模态框
+    const authModal = document.getElementById("authModal");
+    let modalMode = "login";
+    function openModal(mode) { modalMode=mode; document.getElementById("modalTitle").innerText = mode==="login"?"登录":"注册"; document.getElementById("authUser").value=""; document.getElementById("authPass").value=""; document.getElementById("authMsg").innerText=""; authModal.style.display="flex"; }
+    function closeAuthModal() { authModal.style.display="none"; }
+    document.getElementById("authConfirmBtn").onclick = () => {
+        const username = document.getElementById("authUser").value.trim();
+        const pwd = document.getElementById("authPass").value.trim();
+        if(!username||!pwd) { document.getElementById("authMsg").innerText="请填写完整"; return; }
+        if(modalMode==="login"){
+            const user = users.find(u=>u.username===username && u.password===pwd);
+            if(user){ currentUser=user; updateAuthUI(); closeAuthModal(); }
+            else document.getElementById("authMsg").innerText="账号或密码错误";
+        } else {
+            if(users.find(u=>u.username===username)) { document.getElementById("authMsg").innerText="用户名已存在"; return; }
+            users.push({username, password:pwd}); saveUsers(); currentUser={username,password:pwd}; updateAuthUI(); closeAuthModal();
+        }
+    };
+    document.getElementById("switchAuthModeBtn").onclick = () => { openModal(modalMode==="login"?"register":"login"); };
+    document.getElementById("navLoginBtn").onclick = () => { if(currentUser) alert(`欢迎回来，${currentUser.username}`); else openModal("login"); };
+    document.getElementById("logoutBtn").onclick = () => { currentUser=null; updateAuthUI(); };
+    document.getElementById("closeModalBtn").onclick = closeAuthModal;
+    document.getElementById("closeViewModal").onclick = () => document.getElementById("viewModal").style.display = "none";
+
+    // 发帖
+    document.getElementById("submitPostBtn")?.addEventListener("click", ()=>{
+        const title = document.getElementById("postTitle").value;
+        const content = document.getElementById("postContent").value;
+        if(!currentUser) { alert("请先登录"); return; }
+        if(!title.trim() || !content.trim()) { alert("内容不能为空"); return; }
+        posts.push({id:Date.now(), author:currentUser.username, title:title.trim(), content:content.trim(), time:new Date().toLocaleString()});
+        savePosts(); renderPosts();
+        document.getElementById("postTitle").value=""; document.getElementById("postContent").value="";
+    });
+    document.getElementById("addQuoteBtn")?.addEventListener("click", ()=>{
+        const text = document.getElementById("quoteInput").value;
+        const color = document.getElementById("quoteColorSelect").value;
+        if(!text.trim()) return;
+        quotes.unshift({id:Date.now(), text:text.substring(0,120), color, time:new Date().toLocaleString()});
+        saveQuotes(); renderQuotes();
+        document.getElementById("quoteInput").value="";
+    });
+
+    // 上传作品
+    document.getElementById("uploadNovelBtn")?.addEventListener("click", () => {
+        if(!currentUser) { alert("请先登录"); return; }
+        const title = document.getElementById("novelTitle").value.trim();
+        const content = document.getElementById("novelContent").value.trim();
+        if(!title || !content) { alert("请填写标题和内容"); return; }
+        novels.push({id:Date.now(), title, author:currentUser.username, content});
+        saveNovels(); renderNovels();
+        document.getElementById("novelTitle").value=""; document.getElementById("novelContent").value="";
+    });
+    document.getElementById("uploadComicBtn")?.addEventListener("click", () => {
+        if(!currentUser) { alert("请先登录"); return; }
+        const title = document.getElementById("comicTitle").value.trim();
+        const file = document.getElementById("comicImage").files[0];
+        if(!title || !file) { alert("请填写标题并选择图片"); return; }
+        const reader = new FileReader();
+        reader.onload = e => {
+            comics.push({id:Date.now(), title, author:currentUser.username, image: e.target.result});
+            saveComics(); renderComics();
+            document.getElementById("comicTitle").value=""; document.getElementById("comicImage").value="";
+        };
+        reader.readAsDataURL(file);
+    });
+    document.getElementById("uploadAnimeBtn")?.addEventListener("click", () => {
+        if(!currentUser) { alert("请先登录"); return; }
+        const title = document.getElementById("animeTitle").value.trim();
+        const file = document.getElementById("animeImage").files[0];
+        if(!title || !file) { alert("请填写标题并选择图片"); return; }
+        const reader = new FileReader();
+        reader.onload = e => {
+            animes.push({id:Date.now(), title, author:currentUser.username, image: e.target.result});
+            saveAnimes(); renderAnimes();
+            document.getElementById("animeTitle").value=""; document.getElementById("animeImage").value="";
+        };
+        reader.readAsDataURL(file);
+    });
+
+    // 倒计时
+    function updateCustomCountdown() {
+        if(!customCountdown) { document.getElementById("customCountdownDisplay").innerHTML = "未设置纪念日"; return; }
+        const diff = customCountdown - new Date();
+        if(diff<=0) { document.getElementById("customCountdownDisplay").innerHTML = "🎉 纪念日到啦！🎉"; return; }
+        const days = Math.floor(diff/(1000*60*60*24));
+        const hours = Math.floor((diff%86400000)/3600000);
+        const mins = Math.floor((diff%3600000)/60000);
+        document.getElementById("customCountdownDisplay").innerHTML = `${days}天 ${hours}小时 ${mins}分 ❤️ 距离专属纪念日`;
+    }
+    document.getElementById("setCountdownBtn")?.addEventListener("click", ()=>{
+        const dateVal = document.getElementById("countdownDatePicker").value;
+        if(!dateVal) { alert("请选择日期"); return; }
+        customCountdown = new Date(dateVal);
+        localStorage.setItem(STORAGE_COUNTDOWN, customCountdown.toISOString());
+        updateCustomCountdown();
+    });
+    setInterval(updateCustomCountdown, 60000);
+    if(customCountdown) updateCustomCountdown();
+
+    // 背景
+    function setBackground(url) { document.body.style.backgroundImage = `url(${url})`; localStorage.setItem(STORAGE_BG, url); }
+    document.getElementById("applyBgBtn")?.addEventListener("click", ()=>{
+        const file = document.getElementById("bgUploadInput").files[0];
+        if(file){ const reader = new FileReader(); reader.onload = e => setBackground(e.target.result); reader.readAsDataURL(file); }
+        else alert("请选择图片");
+    });
+    const bgImages = ["https://cdn.pixabay.com/photo/2017/09/15/09/43/corn-2751652_1280.jpg","https://cdn.pixabay.com/photo/2018/06/21/16/07/corn-3488456_1280.jpg","https://images.pexels.com/photos/162472/corn-maize-cobs-vegetable-162472.jpeg"];
+    document.getElementById("randomBgBtn")?.addEventListener("click", ()=>{
+        setBackground(bgImages[Math.floor(Math.random()*bgImages.length)]);
+    });
+    const savedBg = localStorage.getItem(STORAGE_BG);
+    if(savedBg) setBackground(savedBg); else setBackground(bgImages[0]);
+
+    // 照片墙
+    // 照片墙渲染（无默认照片，支持点击查看大图）
+function renderPhotoWall() {
+    const container = document.getElementById("photoWall");
+    if (!container) return;
+    if (userPhotos.length === 0) {
+        container.innerHTML = '<p style="text-align:center; color:#b97f44;">✨ 暂无照片，请点击上方按钮上传 ✨</p>';
+        return;
+    }
+    let html = "";
+    userPhotos.forEach((src, index) => {
+        html += `<img src="${src}" class="photo-item" onclick="window.open('${src}')" style="cursor: pointer; width: 120px; height: 120px; object-fit: cover; border-radius: 16px; border: 2px solid var(--corn-gold);">`;
+    });
+    container.innerHTML = html;
+}
+
+// 获取元素
+const uploadBtn = document.getElementById("uploadPhotoBtn");
+const photoInput = document.getElementById("photoInput");
+
+// 动态添加 webkitdirectory 支持（现代 Chrome/Edge）
+if (photoInput) {
+    // 支持文件夹选择的属性
+    photoInput.setAttribute('webkitdirectory', '');
+    photoInput.setAttribute('directory', '');
+}
+
+// 按钮点击事件：触发文件选择
+uploadBtn?.addEventListener("click", () => {
+    if (photoInput) {
+        photoInput.click();
+    } else {
+        console.error("photoInput 元素不存在");
+    }
+});
+
+// 文件选择变化事件：支持多文件/文件夹上传，替换原有照片
+photoInput?.addEventListener("change", (e) => {
+    const files = Array.from(e.target.files);
+    if (files.length === 0) return;
+
+    // 过滤出所有图片文件
+    const imageFiles = files.filter(file => file.type.startsWith('image/'));
+    if (imageFiles.length === 0) {
+        alert("未选择任何图片文件，请选择包含图片的文件夹或直接选择图片。");
+        return;
+    }
+
+    // 清空原有照片（替换模式）
+    userPhotos = [];
+    let loadedCount = 0;
+    const total = imageFiles.length;
+
+    imageFiles.forEach(file => {
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+            userPhotos.push(ev.target.result);
+            loadedCount++;
+            if (loadedCount === total) {
+                savePhotos();          // 保存到 localStorage
+                renderPhotoWall();     // 重新渲染照片墙
+                alert(`成功上传 ${total} 张照片，已替换原有珍藏瞬间。`);
+            }
+        };
+        reader.onerror = () => {
+            loadedCount++;
+            if (loadedCount === total) {
+                savePhotos();
+                renderPhotoWall();
+                alert(`部分照片读取失败，成功上传 ${userPhotos.length} 张。`);
+            }
+        };
+        reader.readAsDataURL(file);
+    });
+
+    // 清空 input 值，以便再次选择同一个文件夹时能触发 change
+    e.target.value = '';
+});
+    // 日历
+    function generateCalendar() {
+        const now = new Date();
+        const year = now.getFullYear(), month = now.getMonth();
+        const firstDay = new Date(year, month, 1).getDay();
+        const daysInMonth = new Date(year, month+1, 0).getDate();
+        let html = `<div class="calendar-header"><span>${year}年${month+1}月</span></div><div class="calendar-weekdays"><span>日</span><span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span></div><div class="calendar-days">`;
+        for(let i=0;i<firstDay;i++) html += `<div></div>`;
+        for(let d=1;d<=daysInMonth;d++) html += `<div class="calendar-day ${d===now.getDate()?'today':''}">${d}</div>`;
+        html += `</div>`;
+        document.getElementById("calendar").innerHTML = html;
+    }
+    generateCalendar();
+
+    // 页面切换
+    const pages = { home:"homePage", music:"musicPage", community:"communityPage", gallery:"galleryPage" };
+    function switchToPage(pageId) {
+        Object.values(pages).forEach(id => document.getElementById(id).classList.remove("active-page"));
+        document.getElementById(pages[pageId]).classList.add("active-page");
+        document.querySelectorAll(".nav-link").forEach(link => {
+            if(link.dataset.page === pageId) link.classList.add("active");
+            else link.classList.remove("active");
+        });
+    }
+    document.querySelectorAll(".nav-link").forEach(link => {
+        link.addEventListener("click", (e) => { e.preventDefault(); switchToPage(link.dataset.page); });
+    });
+
+    // 放大游戏功能
+    document.addEventListener('DOMContentLoaded', function() {
+        const enlargeBtn = document.getElementById('enlargeGameBtn');
+        const modal = document.getElementById('fullscreenGameModal');
+        const closeBtn = document.getElementById('closeFullscreenBtn');
+        if (enlargeBtn && modal && closeBtn) {
+            enlargeBtn.addEventListener('click', () => { modal.style.display = 'flex'; });
+            closeBtn.addEventListener('click', () => { modal.style.display = 'none'; });
+            modal.addEventListener('click', (e) => { if (e.target === modal) modal.style.display = 'none'; });
+        }
+    });
+
+    // 初始化
+    renderPosts(); renderQuotes(); renderNovels(); renderComics(); renderAnimes(); updateAuthUI();
+</script>
+</body>
+</html>
